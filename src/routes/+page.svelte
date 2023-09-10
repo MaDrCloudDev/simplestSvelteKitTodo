@@ -9,7 +9,7 @@
 	}
 
 	// Initialize a writable store for todos
-	let todos = writable<Todo[]>([]);
+	const todos = writable<Todo[]>([]);
 
 	// Initialize a writable store for newTodo
 	let newTodo = '';
@@ -22,36 +22,33 @@
 		}
 	});
 
+	// Function to update todos and save to localStorage
+	function updateTodos(callback: (currentTodos: Todo[]) => Todo[]) {
+		todos.update((currentTodos) => {
+			const updatedTodos = callback(currentTodos);
+			localStorage.setItem('todos', JSON.stringify(updatedTodos));
+			return updatedTodos;
+		});
+	}
+
 	// Add todo function
 	function addTodo() {
 		if (newTodo) {
-			todos.update((currentTodos) => {
-				const updatedTodos = [...currentTodos, { text: newTodo, completed: false }];
-				localStorage.setItem('todos', JSON.stringify(updatedTodos));
-				return updatedTodos;
-			});
+			updateTodos((currentTodos) => [...currentTodos, { text: newTodo, completed: false }]);
 			newTodo = ''; // Clear the input after adding a todo
 		}
 	}
 
 	// Toggle completed status function
 	function toggleCompleted(index: number, completed: boolean) {
-		todos.update((currentTodos) => {
-			const updatedTodos = currentTodos.map((todo, i) =>
-				i === index ? { ...todo, completed } : todo
-			);
-			localStorage.setItem('todos', JSON.stringify(updatedTodos));
-			return updatedTodos;
-		});
+		updateTodos((currentTodos) =>
+			currentTodos.map((todo, i) => (i === index ? { ...todo, completed } : todo))
+		);
 	}
 
 	// Delete todo function
 	function deleteTodo(index: number) {
-		todos.update((currentTodos) => {
-			const updatedTodos = currentTodos.filter((_, i) => i !== index);
-			localStorage.setItem('todos', JSON.stringify(updatedTodos));
-			return updatedTodos;
-		});
+		updateTodos((currentTodos) => currentTodos.filter((_, i) => i !== index));
 	}
 </script>
 
