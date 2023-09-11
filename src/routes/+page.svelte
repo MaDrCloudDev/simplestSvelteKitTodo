@@ -77,8 +77,6 @@
 					</li>
 				{/each}
 			</ul>
-		{:else}
-			<p>No todos yet. Add one above!</p>
 		{/if}
 	</div>
 </div>
