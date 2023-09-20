@@ -40,9 +40,9 @@
 	}
 
 	// Toggle completed status function
-	function toggleCompleted(index: number, completed: boolean) {
+	function toggleCompleted(index: number) {
 		updateTodos((currentTodos) =>
-			currentTodos.map((todo, i) => (i === index ? { ...todo, completed } : todo))
+			currentTodos.map((todo, i) => (i === index ? { ...todo, completed: !todo.completed } : todo))
 		);
 	}
 
@@ -50,11 +50,18 @@
 	function deleteTodo(index: number) {
 		updateTodos((currentTodos) => currentTodos.filter((_, i) => i !== index));
 	}
+
+	// Handle key down event
+	function handleKeyDown(event: KeyboardEvent, index: number) {
+		if (event.key === 'Enter') {
+			toggleCompleted(index);
+		}
+	}
 </script>
 
 <div class="container">
 	<div class="todo-app">
-		<h1>Todo List</h1>
+		<h1 class="title">simplestSvelteKitTodo</h1>
 
 		<div>
 			<input type="text" bind:value={newTodo} placeholder="New Todo" />
@@ -68,8 +75,8 @@
 						<label>
 							<input
 								type="checkbox"
-								bind:checked={todo.completed}
-								on:change={(e) => toggleCompleted(index, e.target.checked)}
+								checked={todo.completed}
+								on:change={() => toggleCompleted(index)}
 							/>
 							<span class={todo.completed ? 'completed' : ''}>{todo.text}</span>
 						</label>
@@ -92,6 +99,7 @@
 	.todo-app {
 		max-width: 400px;
 		width: 100%;
+		text-align: center;
 		background-color: #333;
 		color: #fff;
 		padding: 20px;
