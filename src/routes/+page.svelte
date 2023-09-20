@@ -137,7 +137,13 @@
 	}
 
 	.todo-app label input[type='checkbox'] {
-		margin: 0 10px 0 0;
+		float: left;
+		margin: 3px 10px 0 0;
+	}
+
+	.todo-app label {
+		width: 100%;
+		cursor: pointer;
 	}
 
 	.todo-app span.completed {
